@@ -4,7 +4,7 @@ var IncomingWebhook = require('@slack/client').IncomingWebhook;
 
 // Credentials
 var twitter = require('./config/twitter')
-var tone = require('./config/tone');
+var tone = require('./config/tone'); //Watson ToneAnalyzerV3 credentials
 var slackWebHookURL =  require('./config/slack').slackWebHookURL || '';
 var webhook = new IncomingWebhook(slackWebHookURL);
 
@@ -17,8 +17,8 @@ var T = new Twit({
 })
 
 const options = {
-  // screen_name: 'NYCTSubway',
-  screen_name: 'fabricebttest',
+  screen_name: 'NYCTSubway',
+  // screen_name: 'fabricebttest',
   count: 1
 };
 
