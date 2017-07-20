@@ -57,6 +57,12 @@ shouldSendSlack = (tweet) => {
   let sendSlackMessage;
   let isMyTrain = false;
 
+  /*
+    TODO: Filter out for just 'M' not just letter m,
+          ignore replies back, maybe ignore if include '@' or '^' for
+                  their initials ex: '^FT'
+
+  */
   keywords.forEach((word) => {
     if (tweet.toLowerCase().includes(word)) {
       if (word === train) {
