@@ -5,9 +5,12 @@
   "author": "Fabrice Toussaint",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.15.3"
+    "express": "^4.15.3",
+    "slack": "^8.3.1",
+    "twit": "^2.2.9",
+    "twitter": "^1.7.1",
+    "watson-developer-cloud": "^2.34.0"
   },
-
   "scripts": {
     "start": "nodemon index.js"
   }
