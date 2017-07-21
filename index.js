@@ -3,18 +3,12 @@ var Twit = require('twit')
 var IncomingWebhook = require('@slack/client').IncomingWebhook;
 
 // Credentials
-var twitter = require('./config/twitter')
+var twitterApi = require('./config/twitter')
 var tone = require('./config/tone'); //Watson ToneAnalyzerV3 credentials
 var slackWebHookURL =  require('./config/slack').slackWebHookURL || '';
 var webhook = new IncomingWebhook(slackWebHookURL);
 
-var T = new Twit({
-  consumer_key: twitter.consumer_key,
-  consumer_secret: twitter.consumer_secret,
-  access_token: twitter.access_token,
-  access_token_secret: twitter.access_token_secret,
-  timeout_ms: 60*1000,  // optional HTTP request timeout to apply to all requests.
-})
+var T = new Twit(twitterApi);
 
 const options = {
   screen_name: 'NYCTSubway',
@@ -78,8 +72,10 @@ setInterval(() => {
   T.get('statuses/user_timeline', options, (err, data) => {
     if (lastTweet !== data[0].text) {
       lastTweet = data[0].text;
+
       if (shouldSendSlack(lastTweet)) {
-        // SEND THE LASTTWEET TO MY SLACK MESSAGE
+        // Signaled that my train is mentioned or delayed
+        // notify me via my slack DM
         console.log(lastTweet);
         webhook.send(lastTweet, function(err, res) {
           if (err) {
