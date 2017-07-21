@@ -18,7 +18,6 @@ var T = new Twit({
 
 const options = {
   screen_name: 'NYCTSubway',
-  // screen_name: 'fabricebttest',
   count: 1
 };
 
@@ -29,11 +28,11 @@ var tone_analyzer = new ToneAnalyzerV3({
 });
 
 let lastTweet;
-const train = 'm';
+const train = 'M';
 const trainDirection = 'n/b';
 
 const keywords = [
-  train,
+  train.toUpperCase(),
   'delays',
   trainDirection,
   'resumed',
@@ -41,7 +40,6 @@ const keywords = [
   'jm',
   'service change',
   'good',
-  'resumed'
 ];
 
 rateEmotion = (emotion) => {
@@ -56,15 +54,14 @@ shouldSendSlack = (tweet) => {
   let wordsIncluded = [];
   let sendSlackMessage;
   let isMyTrain = false;
+  let strippedTweet = tweet.replace(/[^\w\s]|_/g, "")
+                            .replace(/\s+/g, " ");
 
-  /*
-    TODO: Filter out for just 'M' not just letter m,
-          ignore replies back, maybe ignore if include '@' or '^' for
-                  their initials ex: '^FT'
-
-  */
   keywords.forEach((word) => {
-    if (tweet.toLowerCase().includes(word)) {
+    const ignoreCaseFlag = word === train ? '' : 'i'; // All Trains are uppercase, compare with case
+    const reg = new RegExp(`\\s${word}\\s`, ignoreCaseFlag);
+
+    if (reg.test(strippedTweet)) {
       if (word === train) {
           isMyTrain = true;
       }
@@ -83,6 +80,7 @@ setInterval(() => {
       lastTweet = data[0].text;
       if (shouldSendSlack(lastTweet)) {
         // SEND THE LASTTWEET TO MY SLACK MESSAGE
+        console.log(lastTweet);
         webhook.send(lastTweet, function(err, res) {
           if (err) {
             console.log('Error:', err);
